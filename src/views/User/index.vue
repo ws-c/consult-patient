@@ -1,34 +1,67 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { getUserInfo } from '@/services/user'
+import type { UserInfo } from '@/types/user'
+import { onMounted, ref } from 'vue'
+import { showConfirmDialog } from 'vant'
+import { useUserStore } from '@/stores'
+import router from '@/router'
+const userInfo = ref<UserInfo>()
+onMounted(async () => {
+  const res = await getUserInfo()
+  userInfo.value = res.data
+  console.log(res.data)
+})
+
+const tools = [
+  { label: '我的问诊', path: '/user/consult' },
+  { label: '我的处方', path: '/' },
+  { label: '家庭档案', path: '/user/patient' },
+  { label: '地址管理', path: '/user/address' },
+  { label: '我的评价', path: '/' },
+  { label: '官方客服', path: '/' },
+  { label: '设置', path: '/' }
+]
+const store = useUserStore()
+const logout = () => {
+  showConfirmDialog({
+    title: '提示',
+    message: '你确定要退出登录吗？'
+  })
+    .then(() => {
+      store.delUser()
+      router.push('/login')
+    })
+    .catch(() => {
+      // on cancel
+    })
+}
+</script>
 
 <template>
   <div class="user-page">
     <div class="user-page-head">
       <div class="top">
-        <van-image
-          round
-          fit="cover"
-          src="https://yanxuan-item.nosdn.127.net/ef302fbf967ea8f439209bd747738aba.png"
-        />
+        <van-image round fit="cover" :src="userInfo?.avatar" />
         <div class="name">
-          <p>用户907456</p>
+          <p>{{ userInfo?.account }}</p>
           <p><van-icon name="edit" /></p>
         </div>
       </div>
       <van-row>
         <van-col span="6">
-          <p>150</p>
+          <p>{{ userInfo?.collectionNumber }}</p>
           <p>收藏</p>
         </van-col>
         <van-col span="6">
-          <p>23</p>
+          <p>{{ userInfo?.likeNumber }}</p>
           <p>关注</p>
         </van-col>
         <van-col span="6">
-          <p>270</p>
+          <p>{{ userInfo?.score }}</p>
           <p>积分</p>
         </van-col>
         <van-col span="6">
-          <p>3</p>
+          <p>{{ userInfo?.couponNumber }}</p>
           <p>优惠券</p>
         </van-col>
       </van-row>
@@ -42,23 +75,44 @@
       </div>
       <van-row>
         <van-col span="6">
-          <cp-icon name="user-paid" />
+          <van-badge :content="userInfo?.orderInfo.paidNumber || ''">
+            <cp-icon name="user-paid" />
+          </van-badge>
           <p>待付款</p>
         </van-col>
         <van-col span="6">
-          <cp-icon name="user-shipped" />
+          <van-badge :content="userInfo?.orderInfo.shippedNumber || ''">
+            <cp-icon name="user-shipped" />
+          </van-badge>
           <p>待发货</p>
         </van-col>
         <van-col span="6">
-          <cp-icon name="user-received" />
+          <van-badge :content="userInfo?.orderInfo.receivedNumber || ''">
+            <cp-icon name="user-received" />
+          </van-badge>
           <p>待收货</p>
         </van-col>
         <van-col span="6">
-          <cp-icon name="user-finished" />
+          <van-badge :content="userInfo?.orderInfo.finishedNumber || ''">
+            <cp-icon name="user-finished" />
+          </van-badge>
           <p>已完成</p>
         </van-col>
       </van-row>
     </div>
+    <div class="user-page-group">
+      <h3>快捷工具</h3>
+      <van-cell
+        v-for="(item, i) in tools"
+        :key="i"
+        :title="item.label"
+        is-link
+        :to="item.path"
+      >
+        <template #icon><cp-icon :name="`user-tool-0${i + 1}`" /></template>
+      </van-cell>
+    </div>
+    <a @click="logout" class="logout" href="javascript:;"> 退出登录 </a>
   </div>
 </template>
 
@@ -142,6 +196,30 @@
         padding-top: 4px;
       }
     }
+  }
+  // 分组
+  &-group {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    h3 {
+      padding-left: 16px;
+      line-height: 44px;
+    }
+    .van-cell {
+      align-items: center;
+    }
+    .cp-icon {
+      font-size: 17px;
+      margin-right: 10px;
+    }
+  }
+  .logout {
+    display: block;
+    margin: 20px auto;
+    width: 100px;
+    text-align: center;
+    color: var(--cp-price);
   }
 }
 </style>
