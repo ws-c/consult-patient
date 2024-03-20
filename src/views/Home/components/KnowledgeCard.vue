@@ -45,6 +45,7 @@ defineProps<{ item: Knowledge }>()
 
 <style lang="scss" scoped>
 .knowledge-card {
+  margin-left: 15px;
   padding: 20px 0 16px;
   .head {
     display: flex;
