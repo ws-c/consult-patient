@@ -8,3 +8,4 @@ export default pinia
 
 // 导入所有的成员，再全部导出去
 export * from './user'
+export * from './consult'
