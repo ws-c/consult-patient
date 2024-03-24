@@ -5,7 +5,6 @@ const { status, countdown = 0 } = defineProps<{
   status?: OrderType
   countdown?: number
 }>()
-console.log(status)
 </script>
 
 <template>

@@ -1,5 +1,4 @@
 import { IllnessTime } from '@/enum'
-
 export const timeOptions = [
   { label: '一周内', value: IllnessTime.Week },
   { label: '一月内', value: IllnessTime.Month },
