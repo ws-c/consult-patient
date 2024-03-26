@@ -10,6 +10,8 @@ import dayjs from 'dayjs'
 import { getPrescriptionPic } from '@/services/consult'
 import { useRouter } from 'vue-router'
 import EvaluteCard from './EvaluateCard.vue'
+import { useShowPrescription } from '@/composable'
+
 // import { useShowPrescription } from '@/composable'
 // import { getConsultFlagTimeText, getIllnessTimeText } from '@/utils/fillter'
 const formatTime = (time: string) => dayjs(time).format('HH:mm')
@@ -45,13 +47,7 @@ const buy = (pre: Prescription | undefined) => {
 }
 
 // 查看处方
-// const { showPrescription } = useShowPrescription()
-const showPrescription = async (id: string) => {
-  if (id) {
-    const res = await getPrescriptionPic(id)
-    showImagePreview([res.data.url])
-  }
-}
+const { showPrescription } = useShowPrescription()
 </script>
 
 <template>
@@ -150,7 +146,7 @@ const showPrescription = async (id: string) => {
         <div class="head van-hairline--bottom">
           <div class="head-tit">
             <h3>电子处方</h3>
-            <p @click="showPrescription(msg.prescription!.id)">
+            <p @click="showPrescription(msg.prescription?.id)">
               原始处方 <van-icon name="arrow"></van-icon>
             </p>
           </div>

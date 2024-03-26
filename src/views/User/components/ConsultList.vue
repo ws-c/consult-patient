@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ConsultType } from '@/enums'
+import { ConsultType } from '@/enum'
 import { getConsultOrderList } from '@/services/consult'
 import type { ConsultOrderItem, ConsultOrderListParams } from '@/types/consult'
 import { ref } from 'vue'
@@ -23,6 +23,9 @@ const onLoad = async () => {
   }
   loading.value = false
 }
+const onDelete = (id: string) => {
+  list.value = list.value.filter((item) => item.id !== id)
+}
 </script>
 
 <template>
@@ -33,7 +36,12 @@ const onLoad = async () => {
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <consult-item v-for="i in list" :key="i.id" :item="i" />
+      <consult-item
+        @delete="onDelete"
+        v-for="i in list"
+        :key="i.id"
+        :item="i"
+      />
     </van-list>
   </div>
 </template>
