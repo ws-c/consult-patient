@@ -13,6 +13,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
     "@vueuse/core": "^10.9.0",
     "dayjs": "^1.11.10",
     "id-validator": "^1.3.0",

@@ -37,7 +37,7 @@ const send = async () => {
   const res = await sendMobileCode(phone.value, 'login')
   code.value = res.data.code
   time.value = 60
-  timeId = setInterval(() => {
+  timeId = window.setInterval(() => {
     time.value--
     if (time.value <= 0) {
       clearInterval(timeId)
