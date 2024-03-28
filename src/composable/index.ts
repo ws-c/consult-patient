@@ -1,7 +1,10 @@
-import { ref } from 'vue'
+import { ref, onUnmounted, type Ref } from 'vue'
 import { followDoctor, getPrescriptionPic } from '@/services/consult'
 import type { FollowType } from '@/types/consult'
 import { showImagePreview } from 'vant'
+import { showToast, type FormInstance } from 'vant'
+import { sendMobileCode } from '@/services/user'
+import type { CodeType } from '@/types/user'
 // 封装逻辑，规范 useXxx，表示使用某功能
 export const useFollow = (type: FollowType = 'doc') => {
   const loading = ref(false)
@@ -26,4 +29,27 @@ export const useShowPrescription = () => {
     }
   }
   return { showPrescription }
+}
+// 发送短信验证码吗逻辑
+export const useSendMobileCode = (mobile: Ref<string>, type: CodeType) => {
+  const form = ref<FormInstance>()
+  const time = ref(0)
+  let timeId: number
+  const send = async () => {
+    if (time.value > 0) return
+    await form.value?.validate('mobile')
+    await sendMobileCode(mobile.value, type)
+    showToast('发送成功')
+    time.value = 60
+    // 倒计时
+    clearInterval(timeId)
+    timeId = window.setInterval(() => {
+      time.value--
+      if (time.value <= 0) window.clearInterval(timeId)
+    }, 1000)
+  }
+  onUnmounted(() => {
+    window.clearInterval(timeId)
+  })
+  return { form, time, send }
 }
