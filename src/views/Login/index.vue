@@ -8,8 +8,8 @@ import { useRoute, useRouter } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 const agree = ref(false)
-const phone = ref()
-const password = ref('')
+const phone = ref('13230000100')
+const password = ref('abc12345')
 const show = ref(false)
 // 表单提交
 const onSubmit = async () => {
